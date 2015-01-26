@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+    <form enctype="multipart/form-data" method="post" id="zipcoder-form" action="">
+        {% csrf_token %}
+        {{ form }}
+        <a class="btn btn-primary" id="go">Go!</a>
+    </form>
+    {% if geoJSON_data %}
+    <h3>Zip codes you will encounter:</h3>
+    <ul>
+        {% for zipcode in zipcodes %}
+        <li>{{ zipcode }}</li>
+        {% endfor %}
+    </ul>
+    <br/>
+    <div id="map"></div>
+    {% endif %}
+
+{% endblock %}
+{% block js_script %}
+    $("#go").bind("click", function() {
+        $("#zipcoder-form").submit();
+    });
+    {% if geoJSON_data %}
+
+    {% autoescape off %}
+    var data = {{ geoJSON_data }};
+    {% endautoescape %}
+
+    var map = L.mapbox.map('map', 'giaviv.l1np32kh', {
+        accessToken: 'pk.eyJ1IjoiZ2lhdml2IiwiYSI6IlNRVGlRZzQifQ.wYscJXf0bL0tF7kJ93hSYg'
+    });
+    route_layer = L.geoJson(data, {
+        style: function (feature) {
+            switch (feature.geometry.type) {
+                case "LineString":
+                    return {color: 'black'};
+                case "Point":
+                    return {color: 'blue'};
+                default:
+                    return {color: 'red'};
+            }
+        },
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.name);
+        }
+    }).addTo(map);
+    map.fitBounds(route_layer.getBounds());
+
+    {% endif %}
+{% endblock %}

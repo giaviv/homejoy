@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Homejoy Takehome Test</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+        {% if geoJSON_data|default:False %}
+        <link href='//api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+        {% endif %}
+        <link href="/static/css/zipcoder.css" rel="stylesheet" />
+    </head>
+    <body>
+        {% if geoJSON_data|default:False %}
+        <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+        {% endif %}
+        <div class="container">
+            {% block content %}{% endblock %}
+            <br/><br/><br/>
+            <hr/>
+            <footer>
+                <p>&copy; Aviv Giladi 2015</p>
+            </footer>
+        </div>
+        <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                {%  block js_script %}
+                {% endblock %}
+            });
+        </script>
+    </body>
+</html>
