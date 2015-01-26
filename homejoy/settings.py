@@ -1,6 +1,7 @@
 
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 SECRET_KEY = 'okk1w(!0^mj4yye@d9f&lp!t#y%j4k4^scvayazo*w^jg@bdr!'
@@ -12,9 +13,6 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
-    #'django.contrib.admin',
-    #'django.contrib.auth',
-    #'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -36,25 +34,16 @@ ROOT_URLCONF = 'homejoy.urls'
 WSGI_APPLICATION = 'homejoy.wsgi.application'
 
 DATABASES = {}
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = 'America/Los_Angeles' # West coast best coast
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
@@ -67,17 +56,17 @@ TEMPLATE_DIRS = (
 )
 
 STATIC_URL = '/static/'
-
+# my key for the Google API services
 GOOGLE_API_KEY = 'AIzaSyDViIUJoD1PM2FXGESw6PrRzBvV3oQ6--0'
-
-DATA_DIR = os.path.join(BASE_DIR, 'data2')
-
+# the directory where the zipcode shape data lie as well as the rtree index
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+# file name for the zipcode shp file
 ZIPCODES_SHP = os.path.join(DATA_DIR, 'cb_2013_us_zcta510_500k.shp')
-
+# rtree index file
 RTREE_INDEX_FILE = os.path.join(DATA_DIR, 'rtree')
-
+# physical rtree index filename
 RTREE_INDEX_FILE_NAME = RTREE_INDEX_FILE + '.dat'
-
+# temp directory to store route shapes used for calculations
 TMP_DIR = os.path.join(BASE_DIR, 'tmp')
 
 

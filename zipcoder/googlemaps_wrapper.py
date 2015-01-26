@@ -8,11 +8,17 @@ from zipcoder.exceptions import InvalidAddressException, MultipleResultsForAddre
 
 @decorators.singleton
 class GoogleMapsWrapper(object):
-
-    def __init__(self): # raises ValueError/NotImplementedError
+    """Class wraps the GoogleMaps API with convenient functions for our purposes.
+    It is singleton because only one client is necessary globally."""
+    def __init__(self):
+        # could raise a ValueError/NotImplementedError if key is wrong
         self._client = Client(settings.GOOGLE_API_KEY)
 
     def get_address_coords(self, address):
+        """Returns the coordinates for a given address.
+
+        Could raise InvalidAddressException, MultipleResultsForAddressException
+        or UnexpectedAPIResultsException."""
         res = self._client.geocode(address)
         if not res:
             raise InvalidAddressException()
@@ -25,16 +31,21 @@ class GoogleMapsWrapper(object):
             raise UnexpectedAPIResultsException()
 
     def get_directions_coords(self, from_addr, to_addr):
+        """Returns the list of coordinates for driving directions between two addresses."""
         res = self._client.directions(from_addr, to_addr)
         return self._decode_google_polyline(res[0]['overview_polyline']['points'])
 
     def _decode_google_polyline(self, points):
-        # adapted from https://gist.github.com/signed0/2031157
+        """Returns a list of coordinates by decoding a Google Polyline string.
+
+        This format is explained at:
+        https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+
+        Adapted from https://gist.github.com/signed0/2031157
+        """
         coord_chunks = [[]]
         for char in points:
-            # convert each character to decimal from ascii
             value = ord(char) - 63
-            # values that have a chunk following have an extra 1 on the left
             split_after = not (value & 0x20)
             value &= 0x1F
             coord_chunks[-1].append(value)
@@ -47,7 +58,6 @@ class GoogleMapsWrapper(object):
             coord = 0
             for i, chunk in enumerate(coord_chunk):
                 coord |= chunk << (i * 5)
-            #there is a 1 on the right if the coord is negative
             if coord & 0x1:
                 coord = ~coord #invert
             coord >>= 1
